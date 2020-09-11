@@ -1,0 +1,223 @@
+create database employee;
+
+use employee;
+
+create table emp(
+emp_id int not null,
+emp_name varchar(20),
+emp_age int,
+emp_salary int,
+emp_gender varchar(20),
+emp_address varchar(20),
+primary key(emp_id)
+);
+
+insert into emp values(
+1,'siva',22,50000,'male','Chennai');
+insert into emp values(
+2,'akash',43,75000,'male','kerala');
+insert into emp values(
+3,'saranya',30,65000,'female','bangalore');
+insert into emp values(
+4,'rohan',46,80000,'male','hyderabad');
+insert into emp values(
+5,'kavya',35,100000,'female','mumbai');
+insert into emp values(
+6,'parthiban',38,70000,'male','villupuram');
+insert into emp values(
+7,'divya',57,90000,'female','andhra');
+
+select emp_name from emp;
+select emp_name,emp_salary from emp;
+
+select emp_name,emp_salary,emp_gender from emp;
+select * from emp;
+
+select distinct emp_age from emp;
+
+select distinct emp_address from emp;
+select * from emp where emp_gender='male';
+select * from emp where emp_gender='female';
+
+select * from emp where emp_address in('chennai','bangalore');
+select * from emp where emp_address not in('chennai','bangalore');
+
+select * from emp where emp_age between 30 and 40;
+select * from emp where emp_age=35 and emp_name='kavya';
+
+select * from emp where emp_salary between 50000 and 80000;
+
+select * from emp where emp_gender='male' or emp_address='goa';
+
+select * from emp where emp_address like 'c%';
+select * from emp where emp_address like 'b%';
+select * from emp where emp_address like '%i';
+
+select min(emp_salary) from emp;
+select avg(emp_salary) from emp;
+select count(emp_salary) from emp;
+select sum(emp_salary) from emp;
+
+select sum(emp_age) from emp;
+select count(emp_age) from emp;
+select min(emp_age) from emp;
+select avg(emp_age) from emp;
+
+select count(*) from emp where emp_gender='male';
+select count(*) from emp where emp_gender='female';
+
+select count(emp_age) from emp;
+
+select '            siva'
+select ltrim('            siva')
+
+select 'SIVASUBRAMANIAN'
+select lower('SIVASUBRAMANIAN')
+
+select 'sivasubramanian'
+select upper('sivasubramanian')
+
+select 'siva subramanian'
+select substring('siva subramanian',6,11)
+
+select * from emp order by emp_salary desc;
+select * from emp order by emp_salary asc;
+
+select top 5 * from emp;
+
+select top 5 * from emp where emp_age between 20 and 30;
+
+select avg(emp_salary) as salary from emp group by emp_gender;
+
+select concat(emp_name,',',emp_age) as employee_details from emp;
+
+select * from emp;
+
+select emp_name,avg(emp_salary) as salary
+from emp 
+group by emp_address
+having avg(emp_salary) > 50000
+
+alter table emp
+add emp_dept varchar(20)
+
+select * from emp;
+
+alter table emp
+drop column emp_dept
+
+select * from emp;
+
+update emp
+set emp_name='vaibhav',emp_age=31
+where emp_id=1
+
+select * from emp;
+
+delete from emp
+where emp_name='vaibhav'
+
+select * from emp;
+
+delete from emp
+where emp_id=2
+
+select * from emp;
+
+truncate table emp;
+select * from emp;
+
+create table department (
+d_id int not null,
+d_name varchar(20),
+d_location varchar(20),
+primary key(d_id)
+);
+
+insert into department values (
+1,'sanju','new york');
+insert into department values (
+2,'bhargav','los angeles');
+insert into department values (
+3,'sharan','california');
+insert into department values (
+4,'ram','vietnam');
+insert into department values (
+5,'bharat','texas');
+insert into department values (
+6,'wilson','ohio');
+
+select * from department;
+select * from emp;
+
+select emp.emp_name,emp.emp_address,department.d_name,d_location
+from emp inner join department on emp.emp_name=department.d_name;
+
+select emp.emp_name,emp.emp_address,department.d_name,d_location
+from emp left join department on emp.emp_name=department.d_name;
+
+select emp.emp_name,emp.emp_address,department.d_name,d_location
+from emp right join department on emp.emp_name=department.d_name;
+
+select emp.emp_name,emp.emp_address,department.d_name,d_location
+from emp full join department on emp.emp_name=department.d_name;
+
+select * from emp;
+
+select * from emp
+union all
+select * from department
+
+create view male_emp as
+select * from emp 
+where emp_gender='male';
+
+select * from male_emp;
+
+drop view male_emp;
+
+create function add_five(@num as int)
+returns int
+as
+begin
+return(
+@num+5
+)
+end
+
+select dbo.add_five(100)
+
+create function gender(@gender as varchar(20))
+returns table
+as
+return(
+select * from emp where emp_gender=@gender
+)
+
+select dbo.gender('male')	
+
+create procedure employee_details
+as
+select emp_gender from emp
+go
+
+exec employee_details
+
+create procedure emp_det
+as 
+select avg(emp_salary)as salary from emp where emp_gender='male' and emp_age between 20 and 30;
+go
+
+exec emp_det
+
+create table trigger_test(
+message varchar(20)
+)
+
+DELIMITER $$
+CREATE TRIGGER my_trigger BEFORE INSERT
+ON emp
+	FOR EACH ROW BEGIN
+	    INSERT INTO trigger_test VALUES('added new employee');
+	END $$
+DELIMITER;
